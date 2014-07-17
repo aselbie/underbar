@@ -99,6 +99,9 @@ var _ = {};
 
   // Produce a duplicate-free version of the array.
   _.uniq = function(array) {
+    return _.filter(array, function(value, index, array){
+      return _.indexOf(array, value) === index;
+    })
   };
 
 

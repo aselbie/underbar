@@ -364,7 +364,23 @@ var _ = {};
   // The new array should contain all elements of the multidimensional array.
   //
   // Hint: Use Array.isArray to check if something is an array
-  _.flatten = function(nestedArray, result) {
+  _.flatten = function(nestedArray) {
+    var result = [];
+
+    function goDeeper(array){
+      _.each(array, function(val){
+        if (Array.isArray(val)) {
+          goDeeper(val);
+        } else {
+          result.push(val);
+        }
+      })
+    }
+
+    goDeeper(nestedArray);
+
+    return result;
+
   };
 
   // Takes an arbitrary number of arrays and produces an array that contains

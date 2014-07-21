@@ -378,6 +378,26 @@ var _ = {};
   //
   // See the Underbar readme for details.
   _.throttle = function(func, wait) {
+    var limit = 0;
+    var result;
+    var queued = false;
+
+    var invoke = function() {
+      limit = Date.now() + wait;
+      result = func.apply(this, arguments);
+      var args = arguments;
+
+      setTimeout(function(){
+        if (queued) invoke.apply(this, args);
+        queued = false;
+      }, wait)
+    }
+
+    return function self() {
+      if (Date.now() < limit) queued = true;
+      if (!queued) invoke.apply(this, arguments);
+      return result;
+    }
   };
 
 }).call(this);

@@ -386,6 +386,15 @@ var _ = {};
   // Takes an arbitrary number of arrays and produces an array that contains
   // every item shared between all the passed-in arrays.
   _.intersection = function() {
+    var args = arguments;
+    var prime = Array.prototype.splice.call(args, 0, 1).shift();
+
+    return _.filter(prime, function(candidate){
+      return _.every(args, function(value){
+        return _.contains(value, candidate)
+      })
+    })
+
   };
 
   // Take the difference between one array and a number of other arrays.

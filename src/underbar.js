@@ -276,22 +276,15 @@ var _ = {};
   // _.memoize should return a function that when called, will check if it has
   // already computed the result for the given argument and return that value
   // instead if possible.
+
   _.memoize = function(func) {
-    var previous = {};
-    var result;
+    var memo = {};
 
-    return function() {
-      var alreadyCalled = true;
-
-      for (var i = 0; i < arguments.length; i++) {
-        if (previous[i] != arguments[i]) alreadyCalled = false;
-      };
-
-      if (!alreadyCalled) {
-        result = func.apply(this, arguments);
-        previous = arguments;
+    return function(val) {
+      if (memo[val] === undefined) {
+        memo[val] = func(val);
       }
-      return result;
+      return memo[val];
     };
   };
 
@@ -386,8 +379,8 @@ var _ = {};
   // Takes an arbitrary number of arrays and produces an array that contains
   // every item shared between all the passed-in arrays.
   _.intersection = function() {
-    var args = arguments;
-    var prime = Array.prototype.splice.call(args, 0, 1).shift();
+    var args = Array.prototype.slice.call(arguments, 0);
+    var prime = args.shift();
 
     return _.filter(prime, function(candidate){
       return _.every(args, function(value){
@@ -400,6 +393,15 @@ var _ = {};
   // Take the difference between one array and a number of other arrays.
   // Only the elements present in just the first array will remain.
   _.difference = function(array) {
+    var args = Array.prototype.slice.call(arguments, 0);
+    var prime = args.shift();
+
+    return _.filter(prime, function(candidate){
+      return _.every(args, function(value){
+        return !_.contains(value, candidate)
+      })
+    })
+
   };
 
 
